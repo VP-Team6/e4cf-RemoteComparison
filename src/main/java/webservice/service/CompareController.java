@@ -1,5 +1,7 @@
 package webservice.service;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webservice.exceptions.InvalidRequestException;
 import webservice.exceptions.RequestNotFoundException;
@@ -15,10 +17,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CompareController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/createRequest", produces = APPLICATION_JSON_VALUE)
-    public CompareRequestStatus register(@RequestBody Map<String, List<Tree>> requestData) {
+    public ResponseEntity<String> register(@RequestBody List<Tree> requestData) {
         CompareRequest compareRequest = null;
         try {
-            compareRequest = new CompareRequest(requestData.get("trees").get(0), requestData.get("trees").get(1));
+            compareRequest = new CompareRequest(requestData.get(0), requestData.get(1));
         } catch (Exception e) {
             throw new InvalidRequestException();
         }
@@ -26,16 +28,18 @@ public class CompareController {
         // TODO
         RequestQueue rq = new RequestQueue();
         rq.add(compareRequest);
-        return status(compareRequest.getUuid());
+        //return status(compareRequest.getUuid());
+        return new ResponseEntity<String>(compareRequest.getUuid(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/status", produces = APPLICATION_JSON_VALUE)
-    public CompareRequestStatus status(@RequestParam(value = "uuid") String uuid) {
+    public ResponseEntity<String> status(@RequestParam(value = "uuid") String uuid) {
         RequestQueue rq = new RequestQueue();
         for (CompareRequest request : rq.getQueue()) {
             if (request.getUuid().equals(uuid)) {
                 // TODO
-                return new CompareRequestStatus();
+                return new ResponseEntity<String>("TODO", HttpStatus.OK);
+                //return new CompareRequestStatus();
             }
         }
         // TODO
