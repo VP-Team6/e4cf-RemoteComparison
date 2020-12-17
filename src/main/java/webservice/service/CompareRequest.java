@@ -2,6 +2,8 @@ package webservice.service;
 
 import webservice.components.Tree;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class CompareRequest {
@@ -16,6 +18,13 @@ public class CompareRequest {
         this.tree1 = tree1;
         this.tree2 = tree2;
         this.uuid = UUID.randomUUID().toString();
+    }
+
+    public Map<String, String> getJson(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("uuid", getUuid());
+        map.put("eta", "0");
+        return map;
     }
 
     public String getUuid() {
