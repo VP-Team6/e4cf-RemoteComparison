@@ -1,4 +1,14 @@
-FROM openjdk:8-jdk-alpine
+FROM gradle:latest AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle build --no-daemon 
+
+FROM openjdk:8-jre-slim
+
 EXPOSE 8080
-ADD e4CompareFrameworkServer.jar /app/application.jar
-ENTRYPOINT java -jar /app/application.jar --server.port=8080
+
+RUN mkdir /app
+
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
+RUN ls -la /app/
+ENTRYPOINT java -jar /app/spring-boot-application.jar --server.port=8080
