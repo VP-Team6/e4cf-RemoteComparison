@@ -8,13 +8,14 @@ import java.util.Queue;
 
 public class RequestQueue {
     Queue<CompareRequest> requestQueue = new LinkedList<CompareRequest>();
-
+    //TODO process queue
 
     public void add(CompareRequest r) {
+        r.setStatus(CompareRequest.Status.QUEUED);
         this.requestQueue.add(r);
     }
 
-    public CompareRequest getByUUID(String uuid){
+    public CompareRequest getByUUID(String uuid) {
         for (CompareRequest request : getQueue()) {
             if (request.getUuid().equals(uuid)) {
                 return request;

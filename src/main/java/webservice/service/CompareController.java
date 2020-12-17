@@ -1,7 +1,5 @@
 package webservice.service;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import webservice.exceptions.InvalidRequestException;
 import webservice.exceptions.RequestNotFoundException;
@@ -16,7 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 public class CompareController {
 
-    private RequestQueue rq =  new RequestQueue();
+    private RequestQueue rq = new RequestQueue();
 
     @RequestMapping(method = RequestMethod.POST, value = "/createRequest")
     public Map<String, String> register(@RequestBody List<Tree> requestData) {
@@ -27,14 +25,14 @@ public class CompareController {
             throw new InvalidRequestException();
         }
         this.rq.add(compareRequest);
-        return compareRequest.getJson();
+        return compareRequest.getInitialJson();
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/status", produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> status(@RequestParam(value = "uuid") String uuid) {
+    public Map<String, String> status(@RequestParam(value = "uuid") String uuid) {
         CompareRequest result = this.rq.getByUUID(uuid);
         if (result != null) {
-            return new ResponseEntity<String>(result.getTree1().toString(), HttpStatus.OK);
+            return result.getStatusJson();
         } else {
             throw new RequestNotFoundException();
         }
