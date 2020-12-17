@@ -8,17 +8,19 @@ import webservice.exceptions.RequestNotFoundException;
 import webservice.processing.RequestQueue;
 import webservice.components.Tree;
 
+import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 public class CompareController {
 
+    private RequestQueue rq =  new RequestQueue();
+
     @RequestMapping(method = RequestMethod.POST, value = "/createRequest", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> register(@RequestBody List<Tree> requestData) {
-        CompareRequest compareRequest = null;
+        CompareRequest compareRequest;
         try {
             compareRequest = new CompareRequest(requestData.get(0), requestData.get(1));
         } catch (Exception e) {
@@ -26,23 +28,17 @@ public class CompareController {
         }
 
         // TODO
-        RequestQueue rq = new RequestQueue();
-        rq.add(compareRequest);
-        //return status(compareRequest.getUuid());
+        this.rq.add(compareRequest);
         return new ResponseEntity<String>(compareRequest.getUuid(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/status", produces = APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/status", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<String> status(@RequestParam(value = "uuid") String uuid) {
-        RequestQueue rq = new RequestQueue();
-        for (CompareRequest request : rq.getQueue()) {
-            if (request.getUuid().equals(uuid)) {
-                // TODO
-                return new ResponseEntity<String>("TODO", HttpStatus.OK);
-                //return new CompareRequestStatus();
-            }
+        CompareRequest result = this.rq.getByUUID(uuid);
+        if (result != null) {
+            return new ResponseEntity<String>(result.getTree1().toString(), HttpStatus.OK);
+        } else {
+            throw new RequestNotFoundException();
         }
-        // TODO
-        throw new RequestNotFoundException();
     }
 }
