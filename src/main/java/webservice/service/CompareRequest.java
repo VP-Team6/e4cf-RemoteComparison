@@ -1,5 +1,7 @@
 package webservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import webservice.components.Tree;
 
 import java.util.HashMap;
@@ -23,6 +25,8 @@ public class CompareRequest {
 
 
     public CompareRequest(Tree tree1, Tree tree2) {
+        System.out.println(tree1.value1);
+        System.out.println(tree2.value1);
         this.tree1 = tree1;
         this.tree2 = tree2;
         this.uuid = UUID.randomUUID().toString();
@@ -42,7 +46,7 @@ public class CompareRequest {
         map.put("status", getStatus().name());
         if (getStatus() == Status.DONE) {
             map.put("time", "0"); // TODO runtime for computation
-            map.put("result", tree1.value1); //TODO actual tree comparison
+            map.put("result", tree1.toString()); //TODO actual tree comparison
         }
         return map;
     }
