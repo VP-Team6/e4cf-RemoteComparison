@@ -11,7 +11,7 @@ public class RequestQueue {
     //TODO process queue
 
     public void add(CompareRequest r) {
-        r.setStatus(CompareRequest.Status.QUEUED);
+        r.setStatus(CompareRequest.Status.DONE);
         this.requestQueue.add(r);
     }
 
