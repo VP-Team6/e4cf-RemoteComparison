@@ -1,13 +1,15 @@
 package webservice.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import webservice.components.Tree;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
+/**
+ * Representation of a comparison request
+ */
 public class CompareRequest {
 
     private String uuid;
@@ -23,7 +25,12 @@ public class CompareRequest {
     private Tree tree1;
     private Tree tree2;
 
-
+    /**
+     * Creates a new request from two tree objects
+     *
+     * @param tree1 First tree
+     * @param tree2 Second tree
+     */
     public CompareRequest(Tree tree1, Tree tree2) {
         System.out.println(tree1.value1);
         System.out.println(tree2.value1);
@@ -33,6 +40,12 @@ public class CompareRequest {
         this.status = Status.QUEUED;
     }
 
+    /**
+     * Creates a representation of a task that contains basic information that is available before a task
+     * got added to the queue. (UUID and ETA)
+     *
+     * @return Map with two elements, UUID and ETA
+     */
     public Map<String, String> getInitialJson() {
         HashMap<String, String> map = new HashMap<>();
         map.put("uuid", getUuid());
@@ -40,6 +53,12 @@ public class CompareRequest {
         return map;
     }
 
+    /**
+     * Creates a complete representation of a task.
+     * This contains the result, if the task is completed.
+     *
+     * @return status of the task
+     */
     public Map<String, String> getStatusJson() {
         HashMap<String, String> map = new HashMap<>();
         map.put("uuid", getUuid());
