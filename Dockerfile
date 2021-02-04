@@ -10,5 +10,4 @@ EXPOSE 8080
 RUN mkdir /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
-RUN ls -la /app/
 ENTRYPOINT ["java", "-jar", "/app/spring-boot-application.jar", "--server.port=8080"]
